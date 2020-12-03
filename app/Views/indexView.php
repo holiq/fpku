@@ -36,15 +36,13 @@
             <table class="table">
               <thead>
                 <th class="text-nowrap">Judul Diskusi</th>
-                <th>Kategori</th>
                 <th>Member</th>
                 <th><i class="fa fa-eye"></i></th>
-                <th><i class="fa fa-comment"></i></th>
               </thead>
               <tbody>
                 <?php
                 foreach($posting as $p):
-                  $judl = $p->posting_judul;
+                  $judl = $p['judul'];
                   if(strlen($judl) > 20):
                     $judul = substr($judl, 0, 20)."...";
                   else:
@@ -53,35 +51,30 @@
                   ?>
                   <tr>
                     <td>
-                      <a href="diskusi/<?php echo url_title($p->posting_judul); ?>"><?php echo $judul; ?></a>
-                      <br/><i><small class="text-nowrap"><?php echo date('d-M-Y H:i:s',strtotime($p->posting_tanggal)) ?></small></i>
+                      <a href="diskusi/<?php echo url_title($p['id']); ?>"><?php echo $judul; ?></a>
+                      <br/><i><small class="text-nowrap"><?php echo date('d-M-Y H:i:s',strtotime($p['tanggal'])) ?></small></i>
                     </td>
                     <td>
-                      <a href="kategori.php?id=<?php echo $p->kategori_id; ?>">
-                        <div class="badge badge-warning"><?php echo $p->kategori_nama ?></div>
-                      </a>
-                    </td>
-                    <td>
-                      <a href="detail_member.php?id=<?php echo $p->member_id; ?>">
+                      <a href="detail_member.php?id=<?php echo $p['user_id']; ?>">
                         <center>
                           <?php 
-                          if($p->member_foto == ""){
+                          if($p['user_gambar'] == ""){
                           ?>
                             <img class="img-fluid rounded-circle shadow" style="width: 35px;height: 35px" src="/gambar/sistem/member.png">
                           <?php }else{ ?>
-                            <img class="img-fluid rounded-circle shadow" style="width: 35px;height: 35px" src="/gambar/member/<?php echo $p->member_foto ?>">
+                            <img class="img-fluid rounded-circle shadow" style="width: 35px;height: 35px" src="/gambar/member/<?php echo $p['user_gambar'] ?>">
                           <? } ?>
                           <br>
-                          <small class="ml-2 text-dark"><?php echo ucfirst($p->member_nama) ?></small>  
+                          <small class="ml-2 text-dark"><?php echo ucfirst($p['user_name']) ?></small>  
                         </center>
                       </a>
                     </td>
                     <td>
-                      <div class="badge badge-info"><?php echo $p->posting_dibaca ?></div>
+                      <div class="badge badge-info"><?php echo $p['posting_dibaca'] ?></div>
                     </td>
                     <td>
                       <div class="badge badge-info">
-                        
+                        <?= $jumkomen ?>
                       </div>
                     </td>
                   </tr>

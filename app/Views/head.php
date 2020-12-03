@@ -55,17 +55,16 @@
             <li class="nav-item">
               <a class="nav-link p-1 nav-link-icon" style="font-size:11pt;font-weight:bold" href="/contact">CONTACT US</a>
             </li>
-            <? if(!empty($status)):
-            foreach($status as $m): ?>
+            <? if(!empty($status)): ?>
             <li class="nav-item dropdown">
               <a class="nav-link nav-link-icon" href="#" style="padding:7px;font-size:10pt;font-weight:bold" id="navbar-default_dropdown_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <? if($m->member_foto == ""): ?>
+                <? if($status[0]['user_gambar'] == ""): ?>
                 <img class="img-fluid rounded-circle shadow" style="width: 22px;height: 22px" src="/gambar/sistem/member.png">
                 <? else: ?>
-                <img class="img-fluid rounded-circle shadow" style="width: 22px;height: 22px" src="/gambar/member/<?php echo $m->member_foto ?>">
+                <img class="img-fluid rounded-circle shadow" style="width: 22px;height: 22px" src="/gambar/member/<?php echo $status[0]['user_gambar'] ?>">
                 <? endif; ?>
                 &nbsp;
-                <?php echo $m->member_nama ?> 
+                <?php echo $status[0]['user_name'] ?> 
                 <i class="fa fa-caret-down"></i>
                 <span class="nav-link-inner--text d-lg-none">Settings</span>
               </a>
@@ -77,8 +76,7 @@
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logout">Logout</a>
               </div>
             </li>
-            <? endforeach;
-            else: ?>
+            <? else: ?>
               <li class="nav-item">
                 <a class="btn btn-success btn-sm " style="padding:7px;font-size:10pt;font-weight:bold" href="/masuk">&nbsp;
                   <i class="fa fa-sign-in-alt"></i> &nbsp;LOGIN&nbsp;
@@ -94,19 +92,7 @@
     </nav>
     <div class="container-fluid mb-2">
       <div class="row">
-        <div class="col-lg-2 mb-2">
-          <div class="btn-group">
-            <button type="button" class="btn btn- btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kategori Diskusi</button>
-            <div class="dropdown-menu mt-1">
-              <? foreach($kategori as $d): ?>
-              <a class="dropdown-item" href="kategori/<?= url_title($d->kategori_nama); ?>"><?php echo $d->kategori_nama; ?></a>
-              <? endforeach; ?>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/">Tampilkan Semua</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-10">
+        <div class="col-lg-12">
           <div class="form-group">
             <form action="/cari" method="get">
               <div class="input-group input-group-alternative mb-4">

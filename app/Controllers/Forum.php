@@ -8,7 +8,6 @@ class Forum extends Controller
 	{
 		helper(['form', 'url']);
 		$this->query = new ForumModel();
-		$this->kategori = $this->query->kategori();
 		
 		$this->session = session();
 		$this->status = $this->query->status($this->session->get('email'));
@@ -18,10 +17,9 @@ class Forum extends Controller
 		$uri = $this->request->uri;
 		$data['uri'] = $uri;
 		$data['title'] = 'Seccodeid';
-		$data['kategori'] = $this->kategori;
-		$data['posting'] = $this->query->posting()->get()->getResult();
+		$data['posting'] = $this->query->posting()->get()->getResultArray();
 		$data['sidebar'] = $this->query->sidebar();
-		$data['jumdiskusi'] = "";
+		$data['jumkomen'] = $this->query->jumkomen();
 		$data['status'] = $this->status;
 		echo view('indexView', $data);
 	}
@@ -34,7 +32,6 @@ class Forum extends Controller
 		$uri = $this->request->uri;
 		$data['uri'] = $uri;
 		$data['title'] = 'Daftar Member';
-		$data['kategori'] = $this->kategori;
 		if($this->request->getMethod() == 'post')
 		{
 			$cek = [
@@ -47,16 +44,15 @@ class Forum extends Controller
 				$data['error'] = $this->validator;
 			}else{
 				$email = $this->request->getVar('email');
-				if(cekDaftar($email) > 0){
+				if($this->query->cekDaftar($email) > 0){
 					$data['error'] = "Email telah digunakan, silahkan login";
 				}else{
 					$inser = [
-						'member_nama' => $this->request->getVar(esc('nama')),
-						'member_email' => $this->request->getVar('email'),
-						'member_bio' => 'I like seccodeid',
-						'member_status' => '',
-						'member_foto' => '',
-						'member_password' => $this->request->getVar('password'),
+						'user_name' => $this->request->getVar(esc('nama')),
+						'user_email' => $this->request->getVar('email'),
+						'user_password' => sha1($this->request->getVar('password')),
+						'user_gambar' => '',
+						'user_status' => 'Mahasiswa',
 					];
 				}
 				$this->query->daftar($inser);
@@ -71,7 +67,6 @@ class Forum extends Controller
 		$data = [];
 		$data['uri'] = $uri;
 		$data['title'] = 'Masuk Member';
-		$data['kategori'] = $this->kategori;
 		$data['status'] = $this->status;
 		if(!empty($this->session->get('email'))){
 			return redirect()->to(base_url('/member'));
@@ -79,8 +74,8 @@ class Forum extends Controller
 		if($this->request->getMethod() == 'post')
 		{
 			if($this->validate([
-				'email' 		=> 'required',
-				'password'		=> 'required'
+				'email' => 'required',
+				'password' => 'required'
 			])){
 				$email = $this->request->getVar('email');
 				$password = $this->request->getVar('password');
@@ -88,8 +83,8 @@ class Forum extends Controller
 				if($check_user)
 				{
 					$this->session->set('email',$email);
-					$this->session->set('member_id',$check_user['member_id']);
-					$this->session->set('nama',$check_user['member_nama']);
+					$this->session->set('user_id',$check_user['user_id']);
+					$this->session->set('nama',$check_user['user_name']);
 					$this->session->set('status','login');
 					$this->session->setFlashdata('sukses', 'Welcome back');
 					return redirect()->to(base_url('member'));
@@ -101,49 +96,64 @@ class Forum extends Controller
 		}
 		echo view('masukView',$data);
 	}
-	public function kategori()
-	{
-		$uri = $this->request->uri;
-		$data['uri'] = $uri;
-		$judul = str_replace("-"," ", $uri->getSegment(2));
-		$data['title'] = $judul.' - Seccodeid';
-		$data['kategori'] = $this->kategori;
-		$data['kategoriby'] = $this->query->kategoriby($judul);
-		$data['sidebar'] = $this->query->sidebar();
-		$data['jumdiskusi'] = $this->query->jumdiskusi();
-		$data['db'] = $this->query;
-		$data['status'] = $this->status;
-		echo view('kategori.php', $data);
-	}
 	public function diskusiView()
 	{
 		$uri = $this->request->uri;
 		$data['uri'] = $uri;
-		$judul = str_replace("-"," ", $uri->getSegment(2));
-		$data['title'] = $judul.' - Seccodeid';
-		$data['kategori'] = $this->kategori;
-		$data['diskusi'] = $this->query->diskusi($judul)->get()->getResult();
-		$diskusi = $this->query->diskusi($judul)->get()->getResult();
-		$data['diskusi'] = $diskusi;
-		foreach($this->query->diskusi($judul)->get()->getResult() as $k){
-			$id = $k->diskusi_id;
-			$data['reply'] = $this->query->reply($judul, $id)->get()->getResult();
-		}
-		
-			//$data['reply'] = $this->query->reply($judul, $id)->get()->getResult();
-			//$data['p'] = $this->query->reply($judul, $id)->getCompiledSelect();
-		$data['total'] = $this->query->diskusi($judul)->countAllResults();
+		$id = $uri->getSegment(2);
+		$posting = $this->query->diskusi($id)->get()->getResultArray();
+		$data['title'] = $posting[0]['judul'].' - Seccodeid';
+		$data['diskusi'] = $posting;
+		$data['total'] = $this->query->diskusi($id)->countAllResults();
+		$data['jumkomen'] = $this->query->jumkomen();
 		$data['sidebar'] = $this->query->sidebar();
 		$data['status'] = $this->status;
 		$data['stat'] = $this->session->get('status');
+		$data['komen'] = $this->query->komen($id)->get()->getResultArray();
 		if($this->request->getMethod() == 'post')
 		{
-			$cek = [
-				
-			];
+			if($this->validate([
+				'isi' => 'required'
+			])){
+				$inser = [
+					'komentar_posting' => $id,
+					'komentar_isi' => $this->request->getVar('isi'),
+					'komentar_user' => $this->session->get('user_id'),
+				];
+				$this->query->buatKomen($inser);
+			}
 			
 		}
 		echo view('diskusi', $data);
+	}
+	public function postingView()
+	{
+		$uri = $this->request->uri;
+		$data = [];
+		$data['uri'] = $uri;
+		$data['title'] = 'Buat Posting';
+		$data['sidebar'] = $this->query->sidebar();
+		$data['status'] = $this->status;
+		if(empty($this->session->get('email'))){
+			return redirect()->to(base_url('masuk'));
+		}
+		if($this->request->getMethod() == 'post')
+		{
+			if($this->validate([
+				'judul' => 'required',
+				'isi' => 'required'
+			])){
+				$inser = [
+					'judul' => $this->request->getVar(esc('judul')),
+					'isi' => $this->request->getVar('isi'),
+					'posting_user' => $this->session->get('user_id')
+				];
+				$this->query->buatPosting($inser);
+				$data['sukses'] = "Pendaftaran berhasil, silahkan login";
+				return redirect()->to(base_url('/'));
+			}
+		}
+		echo view('postingView',$data);
 	}
 	public function memberView()
 	{
@@ -151,11 +161,10 @@ class Forum extends Controller
 		$data = [];
 		$data['uri'] = $uri;
 		$data['title'] = 'Welcome '.$this->session->get('nama');
-		$id = $this->session->get('member_id');
-		$data['kategori'] = $this->kategori;
+		$id = $this->session->get('user_id');
 		$data['status'] = $this->status;
 		$data['totpos'] = $this->query->totalPosting($id);
-		$data['totmen'] = $this->query->totaldiskusi($id);
+		$data['totmen'] = $this->query->totalKomen($id);
 		if(empty($this->session->get('email'))){
 			return redirect()->to(base_url('masuk'));
 		}
@@ -167,8 +176,8 @@ class Forum extends Controller
 		$data = [];
 		$data['uri'] = $uri;
 		$data['title'] = 'Welcome '.$this->session->get('nama');
-		$id = $this->session->get('member_id');
-		$data['kategori'] = $this->kategori;
+		$id = $this->session->get('user_id');
+		
 		$data['status'] = $this->status;
 		if(empty($this->session->get('email'))){
 			return redirect()->to(base_url('masuk'));
@@ -189,12 +198,12 @@ class Forum extends Controller
 				$rand = $foto->getRandomName();
 				$foto->move(ROOTPATH.'public/gambar/member', $rand);
 				 $inser = [
-					'member_nama' => $this->request->getVar('nama'),
-					'member_email' => $this->request->getVar('email'),
-					'member_bio' => $this->request->getVar('bio'),
+					'user_nama' => $this->request->getVar('nama'),
+					'user_email' => $this->request->getVar('email'),
+					'user_bio' => $this->request->getVar('bio'),
 					'foto' => $rand,
 				]; 
-				$id = $this->session->get('member_id');
+				$id = $this->session->get('user_id');
 				var_dump($inser);
 				//$this->query->profUpdate($id, $inser);
 			}
@@ -209,7 +218,7 @@ class Forum extends Controller
 		$uri = $this->request->uri;
 		$data['uri'] = $uri;
 		$data['title'] = 'Ganti Password';
-		$data['kategori'] = $this->kategori;
+		
 		$data['status'] = $this->status;
 		$data['member'] = $this->query->listMem();
 		if($this->request->getMethod() == 'post')
@@ -244,7 +253,7 @@ class Forum extends Controller
 	public function keluar()
 	{
 		$this->session->remove('email');
-		$this->session->remove('member_id');
+		$this->session->remove('user_id');
 		$this->session->remove('nama');
 		$this->session->remove('status');
 		$this->session->setFlashdata('sukses', 'Berhasil keluar');
@@ -255,7 +264,7 @@ class Forum extends Controller
 		$uri = $this->request->uri;
 		$data['uri'] = $uri;
 		$data['title'] = 'List Member';
-		$data['kategori'] = $this->kategori;
+		
 		$data['list'] = $this->query->listMem();
 		echo view('list_member', $data);
 	}
@@ -264,7 +273,7 @@ class Forum extends Controller
 		$uri = $this->request->uri;
 		$data['uri'] = $uri;
 		$data['title'] = 'Contact Us';
-		$data['kategori'] = $this->kategori;
+		
 		$data['status'] = $this->status;
 		echo view('contact', $data);
 	}

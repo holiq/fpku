@@ -34,13 +34,13 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Forum::index');
 $routes->add('daftar', 'Forum::daftarView');
 $routes->add('masuk', 'Forum::masukView');
+$routes->add('posting', 'Forum::postingView');
 $routes->add('diskusi/(:any)', 'Forum::diskusiView');
 $routes->add('member', 'Forum::memberView');
 $routes->add('member/profile', 'Forum::memProfView');
 $routes->add('member/password', 'Forum::memPassView');
 $routes->add('member/keluar', 'Forum::keluar');
 $routes->add('list_member', 'Forum::listMemView');
-$routes->add('kategori/(:any)', 'Forum::kategori');
 $routes->add('contact', 'Forum::contactView');
 
 
