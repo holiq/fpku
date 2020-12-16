@@ -5,7 +5,7 @@
     <div class="alert alert-success">
       <?= $session->getFlashdata('sukses'); ?>
     </div>
-    <? endif; ?>
+  <?php endif; ?>
     <div class="row">
       <?php echo view('headMem') ?>
       <div class="col-md-9">

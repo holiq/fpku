@@ -13,7 +13,7 @@
                   <span aria-hidden="true">×</span>
                 </button>
               </div>
-            <? endif; ?>
+            <?php endif; ?>
             <form action="" method="post">
               <div class="form-group">
                 <label for="">Email</label>

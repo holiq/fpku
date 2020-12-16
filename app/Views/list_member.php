@@ -8,37 +8,35 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <?php 
+            <?php
             foreach($list as $m):
             ?>
             <div class="col-md-4 mb-3">
               <div class="member">
                 <div class="card bg-primary">
-                  <a href="/detail_member/<?php echo $m->member_id; ?>">
                     <div class="row">
                       <div class="col-md-4">
                       <?php
-                      if($m->member_foto == ""):
+                      if($m->user_gambar == ""):
                       ?>
                       <img class="img-fluid rounded shadow" style="" src="/gambar/sistem/member.png">
-                      <? else: ?>
-                      <img class="img-fluid rounded shadow" style="" src="/gambar/member/<?php echo $m->member_foto ?>">
-                      <? endif; ?>
+                      <?php else: ?>
+                      <img class="img-fluid rounded shadow" style="" src="/gambar/member/<?php echo $m->user_gambar ?>">
+                      <?php endif; ?>
                     </div>
                     <div class="col-md-8 pt-1">
-                      <h5><b><?php echo $m->member_nama; ?></b></h5>
+                      <a href="/detail"><h5><b><?php echo $m->user_name; ?></b></h5></a>
                       <p>
-                        <?php echo $m->member_email;  ?>
+                        <i class='fas fa-id-card-alt'> <strong> User status</strong></i>
                         <br/>
-                        <?php echo $m->member_bio; ?>
+                       <?php echo $m->user_status; ?>
                       </p>
                     </div>
                   </div>
-                </a>
               </div>
             </div>
           </div>
-          <? endforeach; ?>
+          <?php endforeach; ?>
         </div>
       </div>
     </div>

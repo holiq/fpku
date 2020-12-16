@@ -8,7 +8,7 @@
             <h6 class="m-0 font-weight-bold">Profile</h6>
           </div>
           <div class="card-body">
-            <? echo form_open('', array('role' => 'form', 'enctype' => 'multipart/form-data'));
+            <?php echo form_open('', array('role' => 'form', 'enctype' => 'multipart/form-data'));
             foreach($status as $m):
               echo csrf_field();
               if(isset($validation)): ?>
@@ -18,24 +18,24 @@
                 </button>
                 <?= $validation->listErrors(); ?>
               </div>
-              <? endif; ?>
+            <?php endif; ?>
               <div class="row">
                 <div class="col-md-6">
                   <label>Nama</label>
                   <div class="form-group">
-                    <input type="text" name="nama" class="form-control" value="<?= $m->member_nama ?>" reuired>
+                    <input type="text" name="nama" class="form-control" value="<?php echo $m['user_name'] ?>" reuired>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <label>Email</label>
                   <div class="form-group">
-                    <input type="text" name="email" class="form-control" value="<?= $m->member_email ?>" reuired>
+                    <input type="text" name="email" class="form-control" value="<?php echo $m['user_email'] ?>">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <label>Bio</label>
                   <div class="form-group">
-                    <input type="text" name="bio" class="form-control" value="<?= $m->member_bio ?>" reuired>
+                    <input type="text" name="bio" class="form-control" value="<?php echo $m['user_status'] ?>" reuired>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -48,11 +48,10 @@
                     <small class="text-muted">Kosongkan jika tidak ingin mengubah foto profil. *Max 2mb</small>
                   </div>
                 </div>
-                
               </div>
-              <?php echo form_submit('submit', 'Ubah Profile',['class' => 'btn btn-primary btn-block']);
-            endforeach;
-            echo form_close(); ?>
+              <?php echo form_submit('submit', 'Ubah Profile',['class' => 'btn btn-primary btn-block']) ?>;
+            <?php endforeach; ?>
+            <?php echo form_close(); ?>
           </div>
         </div>
       </div>

@@ -31,9 +31,12 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
+
 $routes->get('/', 'Forum::index');
 $routes->add('daftar', 'Forum::daftarView');
 $routes->add('masuk', 'Forum::masukView');
+$routes->get('/jobs', 'Forum::jobs');
+$routes->get('/products', 'Forum::prodct');
 $routes->add('posting', 'Forum::postingView');
 $routes->add('diskusi/(:any)', 'Forum::diskusiView');
 $routes->add('member', 'Forum::memberView');
@@ -42,6 +45,13 @@ $routes->add('member/password', 'Forum::memPassView');
 $routes->add('member/keluar', 'Forum::keluar');
 $routes->add('list_member', 'Forum::listMemView');
 $routes->add('contact', 'Forum::contactView');
+$routes->add('detail', 'Forum::detmember');
+
+$routes->add('admin', 'Admin::adminView');
+$routes->add('admin/posting', 'Admin::postingView');
+$routes->add('admin/posting/buat', 'Admin::adminView');
+$routes->add('admin/posting/edit/(:num)', 'Admin::adminView');
+$routes->add('admin/posting/hapus/(:num)', 'Admin::postingDelete');
 
 
 /**

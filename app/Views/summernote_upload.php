@@ -1,5 +1,4 @@
 <?php 
-include 'koneksi.php';
 $web = $_SERVER['HTTP_HOST'];
 
 if ($_FILES['file']['name']) {

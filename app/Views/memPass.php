@@ -15,10 +15,10 @@
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
-              
-              <?= $gagal ?>
+
+              <?php $gagal ?>
             </div>
-            <? endif; ?>
+          <? endif; ?>
             <div class="form-group">
               <label for="">Masukkan Password Lama</label>
               <input type="password" class="form-control" required="required" name="passlama" placeholder="Masukkan password .." min="5">

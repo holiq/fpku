@@ -5,14 +5,14 @@
         <div class="card">
           <div class="card-header">Login Member</div>
             <div class="card-body">
-            <?php 
+            <?php
             if(isset($alert)):
-              
+
             ?>
-            <? endif; ?>
+          <?php endif; ?>
               <form action="" onsubmit="return validateForm()" method="post">
                 <?= csrf_field(); ?>
-                
+
                 <div class="form-group">
                   <label for="">Nama Lengkap</label>
                   <input type="text" id="nama" class="form-control" required="required" name="nama" placeholder="Masukkan nama lengkap . ..">

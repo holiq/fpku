@@ -1,11 +1,11 @@
       <div class="col-md-3">
         <div class="card profile mb-3">
           <div class="card-body">
-            <? if($status[0]['user_gambar'] == ""): ?>
+            <?php if($status[0]['user_gambar'] == ""): ?>
             <img class="img-profile" src="/gambar/sistem/member.png">
-            <? else: ?>
+            <?php else: ?>
             <img class="img-profile" src="/gambar/member/<?= $status[0]['user_gambar'] ?>">
-            <? endif; ?>
+            <?php  endif; ?>
             <h3 class="font-weight-bold text-center mt-2"><?= $status[0]['user_name'] ?></h3>
             <h5 class="text-muted text-center"><?= $status[0]['user_email'] ?></h5>
             <h6 class="text-muted text-center"><?= $status[0]['user_status'] ?></h6>
@@ -25,4 +25,3 @@
           </div>
         </div>
       </div>
-      

@@ -25,6 +25,9 @@ class ForumModel extends Model {
 	function sidebar(){
 		return $this->posting()->orderBy('posting_dibaca', 'DESC')->limit('5')->get()->getResultArray();
 	}
+	function jumview(){
+		return $this->posting()->orderBy('posting_dibaca', 'komentar_posting = posting.id')->countAllResults();
+	}
 	function jumkomen(){
 		return $this->posting()->join('komentar', 'komentar_posting = posting.id')->countAllResults();
 	}
@@ -49,14 +52,30 @@ class ForumModel extends Model {
 	function totalKomen($id){
 		return $this->db->table('komentar')->join('posting', 'komentar_posting = posting.id')->where('posting_user', $id)->countAllResults();
 	}
-	function profUpdate($data, $id){
-		return $this->db->table('user')->update($data)->where('user_id', $id);
+	function profUpdate($id, $data){
+		return $this->db->table('users')->update($data)->where('user_id', $id);
 	}
 	function listMem(){
-		return $this->db->table('user')->get()->getResult();
+		return $this->db->table('users')->get()->getResult();
 	}
+	function detail(){
+		return $this->db->table('users')->get()->getResult();
+	}
+
 	function ganPass($email, $pass){
 		return $this->db->table('users')->update($data)->where(['user_email' => $email, 'user_password' => sha1($password)]);
+	}
+	//Kalau cukup waktunya lanjut bikin reset pass 
+	function semuaUser(){
+		return $this->db->table('users');
+	}
+	function semuaPosting(){
+		return $this->db->table('posting');
+	}
+	
+	//crud posting
+	function deletePosting($id){
+		return $this->db->table('posting')->delete(['id' => $id]);
 	}
 }
 ?>
