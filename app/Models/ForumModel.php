@@ -73,7 +73,13 @@ class ForumModel extends Model {
 		return $this->db->table('posting');
 	}
 	
-	//crud posting
+	//crud posting 
+	function editPosting($id){
+		return $this->db->table('posting')->where('id', $id)->get()->getResultArray();
+	}
+	function updatePosting($data, $id){
+		return $this->db->table('posting')->update($data)->where('id', $id);
+	}
 	function deletePosting($id){
 		return $this->db->table('posting')->delete(['id' => $id]);
 	}

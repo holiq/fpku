@@ -49,8 +49,8 @@ $routes->add('detail', 'Forum::detmember');
 
 $routes->add('admin', 'Admin::adminView');
 $routes->add('admin/posting', 'Admin::postingView');
-$routes->add('admin/posting/buat', 'Admin::adminView');
-$routes->add('admin/posting/edit/(:num)', 'Admin::adminView');
+$routes->add('admin/posting/buat', 'Admin::postingNew');
+$routes->add('admin/posting/edit/(:num)', 'Admin::postingEdit');
 $routes->add('admin/posting/hapus/(:num)', 'Admin::postingDelete');
 
 
